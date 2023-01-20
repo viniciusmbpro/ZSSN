@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ZSSN</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <nav>
+        <a href="{% url 'interface:survivors' %}">Survivors</a>
+        <a href="{% url 'interface:resources_report' %}">Resources Report</a>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+
+</html>

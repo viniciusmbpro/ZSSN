@@ -1,0 +1,38 @@
+{% extends 'interface/base.html' %}
+
+{% block content %}
+<form method="post" action="{% url 'interface:make_trade' survivor1.id %}">
+    {% csrf_token %}
+    <h2>Survivor 1</h2>
+    <label>Name: {{ survivor1.name }}</label>
+    <label>Points: {{ survivor1.points }}</label>
+    <label>Water: {{ survivor1.water }}</label>
+    <label>Food: {{ survivor1.food }}</label>
+    <label>Medication: {{ survivor1.medication }}</label>
+    <label>Ammunition: {{ survivor1.ammunition }}</label>
+  
+    <h2>Survivor 2</h2>
+    <label>Name: {{ survivor2.name }}</label>
+    <label>Points: {{ survivor2.points }}</label>
+    <label>Water: {{ survivor2.water }}</label>
+    <label>Food: {{ survivor2.food }}</label>
+    <label>Medication: {{ survivor2.medication }}</label>
+    <label>Ammunition: {{ survivor2.ammunition }}</label>
+  
+    <h2>Items to trade</h2>
+    <label>Water: <input type="number" name="survivor1_items" value="0"></label>
+    <label>Food: <input type="number" name="survivor1_items" value="0"></label>
+    <label>Medication: <input type="number" name="survivor1_items" value="0"></label>
+    <label>Ammunition: <input type="number" name="survivor1_items" value="0"></label>
+  
+    <h2>Items to receive</h2>
+    <label>Water: <input type="number" name="survivor2_items" value="0"></label>
+    <label>Food: <input type="number" name="survivor2_items" value="0"></label>
+    <label>Medication: <input type="number" name="survivor2_items" value="0"></label>
+    <label>Ammunition: <input type="number" name="survivor2_items" value="0"></label>
+  
+    <input type="hidden" name="survivor2" value="{{ survivor2.id }}">
+    <input type="submit" value="Make trade">
+  </form>
+  
+{% endblock %}

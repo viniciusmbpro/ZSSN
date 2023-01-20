@@ -1,0 +1,40 @@
+{% extends 'interface/base.html' %}
+
+{% block content %}
+<h1>Survivors</h1>
+<a href="{% url 'interface:add_survivor' %}">add_survivor</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Sex</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Infected</th>
+            <th>Points</th>
+            <th>Reports</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for survivor in survivors %}
+        <tr>
+            <td>{{ survivor.name }}</td>
+            <td>{{ survivor.age }}</td>
+            <td>{{ survivor.sex }}</td>
+            <td>{{ survivor.latitude }}</td>
+            <td>{{ survivor.longitude }}</td>
+            <td>{{ survivor.infected }}</td>
+            <td>{{ survivor.points }}</td>
+            <td>{{ survivor.reports }}</td>
+            <td>
+                <a href="{% url 'interface:survivor_detail' survivor.id %}">Detail</a>
+                <a href="{% url 'interface:delete_survivor' survivor.id %}">delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+{% endblock %}

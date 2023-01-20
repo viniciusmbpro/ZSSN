@@ -1,0 +1,13 @@
+{% extends 'interface/base.html' %}
+
+{% block content %}
+<h1>Update Location</h1>
+<form action="{% url 'interface:update_location' survivor.id %}" method="POST">
+    {% csrf_token %}
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude" name="latitude" value="{{ survivor.latitude }}">
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude" name="longitude" value="{{ survivor.longitude }}">
+    <input type="submit" value="Update">
+</form>
+{% endblock %}

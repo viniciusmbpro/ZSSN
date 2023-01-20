@@ -1,0 +1,55 @@
+{% extends 'interface/base.html' %}
+
+{% block content %}
+  <h1>Survivor Detail</h1>
+  <ul>
+    <li>Name: {{ survivor.name }}</li>
+    <li>Age: {{ survivor.age }}</li>
+    <li>Sex: {{ survivor.sex }}</li>
+    <li>Latitude: {{ survivor.latitude }}</li>
+    <li>Longitude: {{ survivor.longitude }}</li>
+    <li>Infected: {{ survivor.infected }}</li>
+    <li>Points: {{ survivor.points }}</li>
+    <li>Reports: {{ survivor.reports }}</li>
+    <li>Inventory:
+      <ul>
+        <li>Water: {{ survivor.water }}</li>
+        <li>Food: {{ survivor.food }}</li>
+        <li>Medication: {{ survivor.medication }}</li>
+        <li>Ammunition: {{ survivor.ammunition }}</li>
+    </ul>
+  </li>
+</ul>
+<h2>Actions</h2>
+<ul>
+  <li>
+    <a href="{% url 'interface:update_location' survivor.id %}">Update Location</a>
+  </li>
+  <li>
+    <form action="{% url 'interface:make_trade' survivor.id %}" method="get">
+      {% csrf_token %}
+      <select name="survivor2" id="survivor2">
+      {% for survivor in survivors %}
+        <option value="{{ survivor.id }}">{{ survivor.name }} | Reports: {{ survivor.reports }}</option>
+      {% endfor %}
+      </select>
+      <input type="submit" value="Go Make Trade">
+    </form>
+  </li>
+  <li>
+    <form action="{% url 'interface:report_infected' survivor.id %}" method="post">
+      {% csrf_token %}
+      <select name="survivor_reported" id="survivor_reported">
+      {% for survivor in survivors %}
+        <option value="{{ survivor.id }}">{{ survivor.name }} | Reports: {{ survivor.reports }}</option>
+      {% endfor %}
+      </select><br><br>
+      <label>Localização: </label><br>
+      latitude: <input type="number" id="latitude" name="latitude"><br>
+      longitude: <input type="number" id="longitude" name="longitude"><br>
+      <br><br>
+      <input type="submit" value="Report Infected">
+    </form>
+  </li>
+</ul>
+{% endblock %}
