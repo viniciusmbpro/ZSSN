@@ -31,55 +31,39 @@ class SurvivorViewSet(viewsets.ModelViewSet):
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['put'])
+    @action(detail=False, methods=['post'])
     def make_trade(self, request, *args, **kwargs):
         data = dict(request.data)
-        survivor1 = Survivor.objects.filter(~Q(pk=int(request.data["survivor1"])), infected=False).first()
-        survivor2 = Survivor.objects.filter(~Q(pk=int(request.data["survivor2"])), infected=False).first()
+        survivor1 = Survivor.objects.filter(pk=int(request.data["survivor1"]), infected=False).first()
+        survivor2 = Survivor.objects.filter(pk=int(request.data["survivor2"]), infected=False).first()
 
         if survivor1==None or survivor2==None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         items1 = data["survivor1_items"]
         items2 = data["survivor2_items"]
-        survivor1_points = Survivor.calculate_points(
-                int(items1[0]),
-                int(items1[1]),
-                int(items1[2]),
-                int(items1[3]),
-            )
-        survivor2_points = Survivor.calculate_points(
-                int(items2[0]),
-                int(items2[1]),
-                int(items2[2]),
-                int(items2[3]),
-            )
-        
+
+        survivor1_points = Survivor.calculate_points(int(items1[0]), int(items1[1]), int(items1[2]), int(items1[3]))
+        survivor2_points = Survivor.calculate_points(int(items2[0]), int(items2[1]), int(items2[2]), int(items2[3]))
+
         if survivor1.points < survivor1_points or survivor2.points < survivor2_points:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         if survivor1_points != survivor2_points:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        items = {
-            'water': 0,
-            'food': 1,
-            'medication': 2,
-            'ammunition': 3
-        }
 
-        for survivor in (survivor1, survivor2):
-            for item, index in items.items():
-                setattr(survivor, item, getattr(survivor, item) - int(eval(f'items{1 if survivor == survivor1 else 2}[{index}]')))
+        items_list = ["water", "food", "medication", "ammunition"]
 
-        for survivor in (survivor1, survivor2):
-            for item, index in items.items():
-                setattr(survivor, item, getattr(survivor, item) + int(eval(f'items{2 if survivor == survivor1 else 1}[{index}]')))
-                
+        for item in items_list:
+            setattr(survivor1, item, getattr(survivor1, item) - int(items1[items_list.index(item)]))
+            setattr(survivor2, item, getattr(survivor2, item) - int(items2[items_list.index(item)]))
+
+        for item in items_list:
+            setattr(survivor1, item, getattr(survivor1, item) + int(items2[items_list.index(item)]))
+            setattr(survivor2, item, getattr(survivor2, item) + int(items1[items_list.index(item)]))
+
         survivor1.save()
         survivor2.save()
-
-        print(data)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 

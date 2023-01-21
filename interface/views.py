@@ -82,7 +82,7 @@ def make_trade(request, pk):
             "survivor2_items": request.POST.getlist('survivor2_items')
         }
         print(data)
-        requests.put(f"https://zssn-vmb.herokuapp.com/api/survivors/{pk}/make_trade/", data=data)
+        requests.post(f"https://zssn-vmb.herokuapp.com/api/survivors/make_trade/", data=data)
         return redirect(reverse('interface:survivor_detail', kwargs={'pk': pk}))
 
     response = requests.get(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/')
