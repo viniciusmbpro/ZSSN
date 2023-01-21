@@ -1,5 +1,29 @@
 {% extends 'interface/base.html' %}
 
 {% block content %}
-<h1>resources_report</h1>
+
+<h1>Survivors Resources Report</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Total</th>
+      <th>Average</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for resource, data in report.resources.items %}
+    <tr>
+      <td>{{ resource }}</td>
+      <td>{{ data.total }}</td>
+      <td>{{ data.average }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p>Population:</p>
+<p>Total: {{ report.population.total }}</p>
+<p class="infected">Infected: {{ report.population.infected }}</p>
+<p class="non-infected">Non-Infected: {{ report.population.non_infected }}</p>
+<p class="percent">Percent infected: {{ report.population.percent_infected }}</p>
 {% endblock %}

@@ -9,10 +9,9 @@ router = routers.DefaultRouter()
 router.register(r'survivors', SurvivorViewSet, basename='survivors')
 
 urlpatterns = [
-    path('interface/', include('interface.urls')),
+    path('', include('interface.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

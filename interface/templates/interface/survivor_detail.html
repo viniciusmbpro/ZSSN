@@ -28,7 +28,7 @@
   <li>
     <form action="{% url 'interface:make_trade' survivor.id %}" method="get">
       {% csrf_token %}
-      <select name="survivor2" id="survivor2">
+      SURVIVOR: <select name="survivor2" id="survivor2">
       {% for survivor in survivors %}
         <option value="{{ survivor.id }}">{{ survivor.name }} | Reports: {{ survivor.reports }}</option>
       {% endfor %}
@@ -39,7 +39,7 @@
   <li>
     <form action="{% url 'interface:report_infected' survivor.id %}" method="post">
       {% csrf_token %}
-      <select name="survivor_reported" id="survivor_reported">
+      SURVIVOR: <select name="survivor_reported" id="survivor_reported">
       {% for survivor in survivors %}
         <option value="{{ survivor.id }}">{{ survivor.name }} | Reports: {{ survivor.reports }}</option>
       {% endfor %}

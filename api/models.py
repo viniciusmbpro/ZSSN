@@ -1,6 +1,8 @@
 from django.db import models
 
 class Survivor(models.Model):
+    ITEMS = ["water", "food", "medication", "ammunition"]
+
     name = models.CharField(max_length=255)
     age = models.IntegerField()
     sex = models.CharField(max_length=1)

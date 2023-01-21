@@ -22,9 +22,9 @@ def survivor_detail(request, pk):
     return render(request, 'interface/survivor_detail.html', context)
 
 def resources_report(request):
-    response = requests.get('http://127.0.0.1:8000/api/get_resources_report/')
-    report = response.json()
-    context = {'report': report}
+    response = requests.get('http://127.0.0.1:8000/api/survivors/get_resources_report/')
+    context = {'report': response.json()}
+    print(response)
     return render(request, 'interface/resources_report.html', context)
 
 def report_infected(request, pk):

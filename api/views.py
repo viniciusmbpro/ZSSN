@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 from rest_framework.decorators import action
+from django.db.models import Sum
 
 class SurvivorViewSet(viewsets.ModelViewSet):
     queryset = Survivor.objects.all()
@@ -30,11 +31,14 @@ class SurvivorViewSet(viewsets.ModelViewSet):
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['put'])
+    @action(detail=False, methods=['put'])
     def make_trade(self, request, *args, **kwargs):
         data = dict(request.data)
-        survivor1 = Survivor.objects.get(pk=int(request.data["survivor1"]))
-        survivor2 = Survivor.objects.get(pk=int(request.data["survivor2"]))
+        survivor1 = Survivor.objects.filter(~Q(pk=int(request.data["survivor1"])), infected=False).first()
+        survivor2 = Survivor.objects.filter(~Q(pk=int(request.data["survivor2"])), infected=False).first()
+
+        if survivor1==None or survivor2==None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         
         items1 = data["survivor1_items"]
         items2 = data["survivor2_items"]
@@ -94,8 +98,8 @@ class SurvivorViewSet(viewsets.ModelViewSet):
                 survivor.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['get'])
-    def get_resources_report(self, request):
+    @action(detail=False, methods=['get'])
+    def get_resources_report(self, request, *args, **kwargs):
         total_population = Survivor.objects.count()
         infected_population = Survivor.objects.filter(infected=True).count()
         non_infected_population = total_population - infected_population
@@ -103,14 +107,15 @@ class SurvivorViewSet(viewsets.ModelViewSet):
         resources = {}
         for resource in Survivor.ITEMS:
             resources[resource] = {}
-            resources[resource]["total"] = Survivor.objects.aggregate(sum(resource))[resource + "__sum"]
+            resources[resource]["total"] = Survivor.objects.aggregate(Sum(resource))["{}__sum".format(resource)]
             resources[resource]["average"] = resources[resource]["total"] / total_population
 
         return Response(data={
             "population": {
                 "total": total_population,
                 "infected": infected_population,
-                "non_infected": non_infected_population
+                "non_infected": non_infected_population,
+                "percent_infected": (infected_population / total_population) * 100
             },
             "resources": resources
         })
