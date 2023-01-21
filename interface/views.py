@@ -6,23 +6,23 @@ import json
 
 
 def survivors(request):
-    response = requests.get('http://127.0.0.1:8000/api/survivors/')
+    response = requests.get('https://zssn-vmb.herokuapp.com/api/survivors/')
     survivors = response.json()
     context = {'survivors': survivors}
     return render(request, 'interface/survivors.html', context)
 
 def survivor_detail(request, pk):
-    response = requests.get(f'http://127.0.0.1:8000/api/survivors/{pk}/')
+    response = requests.get(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/')
     survivor = response.json()
 
-    response = requests.get('http://127.0.0.1:8000/api/survivors/')
+    response = requests.get('https://zssn-vmb.herokuapp.com/api/survivors/')
     survivors = response.json()
     
     context = {'survivor': survivor, 'survivors': survivors}
     return render(request, 'interface/survivor_detail.html', context)
 
 def resources_report(request):
-    response = requests.get('http://127.0.0.1:8000/api/survivors/get_resources_report/')
+    response = requests.get('https://zssn-vmb.herokuapp.com/api/survivors/get_resources_report/')
     context = {'report': response.json()}
     print(response)
     return render(request, 'interface/resources_report.html', context)
@@ -34,7 +34,7 @@ def report_infected(request, pk):
             'longitude': float(request.POST.get('longitude')),
             }
     print(data)
-    response = requests.put(f'http://127.0.0.1:8000/api/survivors/{pk}/report_infected/', json=data)
+    response = requests.put(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/report_infected/', json=data)
     return redirect(reverse('interface:survivor_detail', kwargs={'pk': pk}))
 
 def update_location(request, pk):
@@ -43,9 +43,9 @@ def update_location(request, pk):
         longitude = request.POST.get('longitude')
         data = {'latitude': latitude, 'longitude': longitude}
         print(data)
-        requests.patch(f'http://127.0.0.1:8000/api/survivors/{pk}/', data=data)
+        requests.patch(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/', data=data)
         return redirect(reverse('interface:survivor_detail', kwargs={'pk': pk}))
-    response = requests.get(f'http://127.0.0.1:8000/api/survivors/{pk}/')
+    response = requests.get(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/')
     survivor = response.json()
     return render(request, 'interface/update_location.html', {'survivor': survivor})
 
@@ -65,12 +65,12 @@ def add_survivor(request):
             'medication': request.POST.get('medication'),
             'ammunition': request.POST.get('ammunition'),
         }
-        requests.post('http://127.0.0.1:8000/api/survivors/', data=data)
+        requests.post('https://zssn-vmb.herokuapp.com/api/survivors/', data=data)
         return redirect(reverse('interface:survivors'))
     return render(request, 'interface/add_survivor.html')
 
 def delete_survivor(request, pk):
-    response = requests.delete(f'http://127.0.0.1:8000/api/survivors/{pk}/')
+    response = requests.delete(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/')
     return redirect(reverse('interface:survivors'))
 
 def make_trade(request, pk):
@@ -82,13 +82,13 @@ def make_trade(request, pk):
             "survivor2_items": request.POST.getlist('survivor2_items')
         }
         print(data)
-        requests.put(f"http://127.0.0.1:8000/api/survivors/{pk}/make_trade/", data=data)
+        requests.put(f"https://zssn-vmb.herokuapp.com/api/survivors/{pk}/make_trade/", data=data)
         return redirect(reverse('interface:survivor_detail', kwargs={'pk': pk}))
 
-    response = requests.get(f'http://127.0.0.1:8000/api/survivors/{pk}/')
+    response = requests.get(f'https://zssn-vmb.herokuapp.com/api/survivors/{pk}/')
     survivor1 = response.json()
 
-    response = requests.get(f'http://127.0.0.1:8000/api/survivors/{request.GET["survivor2"]}/')
+    response = requests.get(f'https://zssn-vmb.herokuapp.com/api/survivors/{request.GET["survivor2"]}/')
     survivor2 = response.json()
     
     context = {'survivor1': survivor1, 'survivor2': survivor2}
