@@ -1,0 +1,1 @@
+web: gunicorn zssn.wsgi:application --log-file -
